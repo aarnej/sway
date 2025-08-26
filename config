@@ -26,6 +26,7 @@ for_window [class=".*"] title_format "<b>%class</b> %title"
 for_window [class=".*"] title_window_icon yes
 for_window [class="obsidian"] floating enable, move position 20 ppt 20 ppt, resize set 40 ppt 60 ppt
 for_window [class="SpeedCrunch"] floating enable, move position 20 ppt 20 ppt, resize set 600 px 600 px
+for_window [class="copyq"] floating enable, move position 20 ppt 20 ppt, resize set 40 ppt 60 ppt
 
 gaps inner 15
 gaps outer -15
@@ -39,6 +40,9 @@ bindsym $mod+d exec "rofi -modi drun,run -show drun"
 bindsym $mod+control+mod1+shift+7 move scratchpad
 bindsym $mod+control+mod1+shift+a [class="Spotify"] focus
 bindsym $mod+control+mod1+shift+b [class="obsidian"] focus
+
+bindsym $mod+control+mod1+shift+Right exec --no-startup-id ~/.config/i3/move-workspace right
+bindsym $mod+control+mod1+shift+Left exec --no-startup-id ~/.config/i3/move-workspace left
 
 bindcode $mod+control+mod1+shift+40 exec "setxkbmap -layout us"
 bindcode $mod+control+mod1+shift+26 exec "setxkbmap -layout ru -variant phonetic"

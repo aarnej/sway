@@ -1,0 +1,7 @@
+#!/bin/bash
+
+WID=$(xdotool getwindowfocus)
+echo "WID: $WID"
+i3-msg move workspace to output $1
+sleep 0.1
+xdotool windowfocus $WID

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 focused_window=$(xdotool getwindowfocus -f)
 output=$(xdotool getwindowgeometry --shell $focused_window)
