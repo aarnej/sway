@@ -1,11 +1,31 @@
-exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork -c 222222
-exec --no-startup-id xssproxy
-exec --no-startup-id xsetroot -solid "#000"
-exec --no-startup-id xset s 300 300
-exec --no-startup-id xset dpms 320 320 320
-exec --no-startup-id xinput set-prop "Logitech G403 HERO Gaming Mouse" "libinput Accel Profile Enabled" 0 1 0
-exec --no-startup-id xinput set-prop "pointer:ZSA Technology Labs Voyager" "libinput Accel Profile Enabled" 0 1 0
-exec --no-startup-id xcalib /usr/share/color/icc/colord/Asus_190715.icm
+input type:keyboard {
+    xkb_layout fi
+    repeat_delay 200
+    repeat_rate 30
+    xkb_options "compose:sclk"
+}
+
+input 2:10:TPPS/2_Elan_TrackPoint {
+    # accel_profile "flat"
+    pointer_accel -0.3
+    scroll_factor 0.2
+}
+ 
+set $lock swaylock
+exec swayidle -w \
+    timeout 600 $lock \
+    timeout 570 'swaymsg "output * dpms off"' \
+    resume 'swaymsg "output * dpms on"' \
+    before-sleep $lock
+
+# exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork -c 222222
+# exec --no-startup-id xssproxy
+# exec --no-startup-id xsetroot -solid "#000"
+# exec --no-startup-id xset s 300 300
+# exec --no-startup-id xset dpms 320 320 320
+# exec --no-startup-id xinput set-prop "Logitech G403 HERO Gaming Mouse" "libinput Accel Profile Enabled" 0 1 0
+# exec --no-startup-id xinput set-prop "pointer:ZSA Technology Labs Voyager" "libinput Accel Profile Enabled" 0 1 0
+# exec --no-startup-id xcalib /usr/share/color/icc/colord/Asus_190715.icm
 
 set $mod Mod4
 
@@ -33,9 +53,9 @@ gaps outer -15
 focus_wrapping no
 font pango:Adwait Sans 9
 floating_modifier $mod
-tiling_drag modifier titlebar
+# tiling_drag modifier titlebar
 
-bindsym $mod+control+mod1+shift+2 exec "rofi -show window"
+bindsym  mod1+tab exec "rofi -show window"
 bindsym $mod+d exec "rofi -modi drun,run -show drun"
 bindsym $mod+control+mod1+shift+7 move scratchpad
 bindsym $mod+control+mod1+shift+a [class="Spotify"] focus
@@ -44,14 +64,22 @@ bindsym $mod+control+mod1+shift+b [class="obsidian"] focus
 bindsym $mod+control+mod1+shift+Right exec --no-startup-id ~/.config/i3/move-workspace right
 bindsym $mod+control+mod1+shift+Left exec --no-startup-id ~/.config/i3/move-workspace left
 
-bindcode $mod+control+mod1+shift+40 exec "setxkbmap -layout us"
-bindcode $mod+control+mod1+shift+26 exec "setxkbmap -layout ru -variant phonetic"
+# bindcode $mod+control+mod1+shift+40 exec "setxkbmap -layout us"
+# bindcode $mod+control+mod1+shift+26 exec "setxkbmap -layout ru -variant phonetic"
 
-bindsym $mod+Return exec kitty
+bindcode $mod+control+mod1+shift+40 exec "sway input type:keyboard xkb_layout fi"
+bindcode $mod+control+mod1+shift+26 exec "sway input type:keyboard xkb_layout us"
+
+
+bindsym $mod+Return exec foot
 bindsym $mod+l exec "loginctl lock-session"
 
-bindsym XF86AudioRaiseVolume exec --no-startup-id pulsemixer --change-volume +5 --max-volume 100
-bindsym XF86AudioLowerVolume exec --no-startup-id pulsemixer --change-volume -5 --max-volume 100
+bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
+bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
+bindsym XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
+bindsym XF86AudioMicMute exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
+
+
 bindsym XF86MonBrightnessDown exec brightnessctl s 10%-
 bindsym XF86MonBrightnessUp exec brightnessctl s +10%
 
@@ -117,7 +145,7 @@ bindsym $mod+Shift+0 move container to workspace number $ws10
 
 bindsym $mod+Shift+c reload
 bindsym $mod+Shift+r restart
-bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
+# bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
 
 mode "resize" {
     bindsym Left resize shrink width 5 px or 5 ppt
