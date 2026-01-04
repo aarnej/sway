@@ -18,12 +18,20 @@ input 2:10:TPPS/2_Elan_TrackPoint {
     scroll_factor 0.2
 }
 
+# Thinkpad Yoga X1 Gen 6
+input 1267:12680:ELAN0673:00_04F3:3188_Mouse events disabled
+input 1267:12680:ELAN0673:00_04F3:3188_Touchpad events disabled
+
 set $lock swaylock
 exec swayidle -w \
-    timeout 600 $lock \
-    timeout 570 'swaymsg "output * dpms off"' \
-    resume 'swaymsg "output * dpms on"' \
     before-sleep $lock
+
+exec swaync
+exec check_battery.sh
+
+# timeout 15 'swaymsg "output * dpms off"' \
+# after-resume 'swaymsg "output * dpms on"' \
+
 
 # exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork -c 222222
 # exec --no-startup-id xssproxy
@@ -77,8 +85,7 @@ bindsym $mod+control+mod1+shift+Left exec --no-startup-id ~/.config/i3/move-work
 bindcode $mod+control+mod1+shift+40 exec "sway input type:keyboard xkb_layout fi"
 bindcode $mod+control+mod1+shift+26 exec "sway input type:keyboard xkb_layout us"
 
-
-bindsym $mod+Return exec foot
+bindsym $mod+Return exec kitty
 bindsym $mod+l exec "loginctl lock-session"
 
 bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
