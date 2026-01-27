@@ -1,3 +1,5 @@
+bindswitch --locked lid:toggle exec swaylock --daemonize && systemctl sleep
+
 input type:keyboard {
     xkb_layout fi
     repeat_delay 200
@@ -22,9 +24,16 @@ input 2:10:TPPS/2_Elan_TrackPoint {
 input 1267:12680:ELAN0673:00_04F3:3188_Mouse events disabled
 input 1267:12680:ELAN0673:00_04F3:3188_Touchpad events disabled
 
+input 1430:1308:3M_3M_MicroTouch_USB_controller {
+    map_to_output "Beckhoff Automation CHI MEI 0x00003039"
+}
+
 set $lock swaylock
 exec swayidle -w \
     before-sleep $lock
+
+exec_always "pkill kanshi; kanshi &"
+exec "copyq --start-server show && swaymsg [app_id=copyq] move scratchpad"
 
 exec swaync
 exec check_battery.sh
@@ -61,7 +70,7 @@ for_window [class=".*"] title_format "<b>%class</b> %title"
 for_window [class=".*"] title_window_icon yes
 for_window [class="obsidian"] floating enable, move position 20 ppt 20 ppt, resize set 40 ppt 60 ppt
 for_window [class="SpeedCrunch"] floating enable, move position 20 ppt 20 ppt, resize set 600 px 600 px
-for_window [class="copyq"] floating enable, move position 20 ppt 20 ppt, resize set 40 ppt 60 ppt
+# for_window [app_id="copyq"] floating enable, move position 20 ppt 20 ppt, resize set 20 ppt 20 ppt
 
 gaps inner 15
 gaps outer -15
@@ -70,7 +79,7 @@ font pango:Adwait Sans 9
 floating_modifier $mod
 # tiling_drag modifier titlebar
 
-bindsym  mod1+tab exec "rofi -show window"
+bindsym mod1+tab exec "rofi -show window"
 bindsym $mod+d exec "rofi -modi drun,run -show drun"
 bindsym $mod+control+mod1+shift+7 move scratchpad
 bindsym $mod+control+mod1+shift+a [class="Spotify"] focus
@@ -86,7 +95,7 @@ bindcode $mod+control+mod1+shift+40 exec "sway input type:keyboard xkb_layout fi
 bindcode $mod+control+mod1+shift+26 exec "sway input type:keyboard xkb_layout us"
 
 bindsym $mod+Return exec kitty
-bindsym $mod+l exec "loginctl lock-session"
+bindsym $mod+l exec $lock
 
 bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
 bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
@@ -123,6 +132,8 @@ bindsym $mod+space focus mode_toggle ; exec --no-startup-id ~/.config/i3/move-cu
 
 bindsym $mod+a focus parent
 bindsym $mod+z focus child
+
+bindsym $mod+Shift+s exec flameshot gui --raw | wl-copy
 
 set $ws1 "1"
 set $ws2 "2"
